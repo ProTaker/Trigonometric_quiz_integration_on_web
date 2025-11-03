@@ -15,7 +15,7 @@ if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
 # ----------------------------------------------------
-# --- 共通の定数とCSS (元のファイルの内容を基に再構築) ---
+# --- 共通の定数とCSS ---
 # ----------------------------------------------------
 
 # --- クイズ1 (補角・余角編) の定数 ---
@@ -82,7 +82,7 @@ Q2_SIN_COS_OPTIONS = ["1/2", "√2/2", "√3/2", "1", "-1/2", "-√2/2", "-√3/
 Q2_TAN_OPTIONS = ["0", "1/√3", "1", "√3", "なし", "-1/√3", "-1", "-√3"]
 Q2_MAX_QUESTIONS = 10
 
-# ★★★ 修正箇所: Q2_ANSWERS の定義（構文エラーを解消）
+# Q2_ANSWERS の完全な定義
 Q2_ANSWERS = {
     "sin": {
         -360: "0", -330: "1/2", -315: "√2/2", -300: "√3/2", -270: "1",
@@ -114,7 +114,7 @@ Q2_ANSWERS = {
 }
 # ----------------------------------------------------
 
-# 共通CSS
+# 共通CSS (前回の回答と同じ)
 st.markdown("""
 <style>
 /* ホーム画面のボタンを大きくする */
@@ -163,7 +163,7 @@ def home_page():
         st.subheader("クイズ 1: 変換公式編")
         st.markdown("$$ \\text{sin}(90^\\circ - \\theta) = \\cos\\theta $$ のような変換公式を問うクイズです。")
         if st.button("クイズ 1 に挑戦 (補角・余角編)", key='go_to_quiz1', use_container_width=True):
-            st.session_state.clear() # クイズの状態を初期化
+            st.session_state.clear() 
             st.session_state.page = 'quiz1'
             st.rerun()
 
@@ -172,12 +172,12 @@ def home_page():
         st.subheader("クイズ 2: 有名角の値編")
         st.markdown("$$ \\text{cos}(120^\\circ) = -\\frac{1}{2} $$ のような有名角の値を問うクイズです。")
         if st.button("クイズ 2 に挑戦 (有名角編)", key='go_to_quiz2', use_container_width=True):
-            st.session_state.clear() # クイズの状態を初期化
+            st.session_state.clear()
             st.session_state.page = 'quiz2'
             st.rerun()
 
 # ----------------------------------------------------
-# --- 📝 クイズ 1 の関数 (trig_quiz_app_on_web.py) ---
+# --- 📝 クイズ 1 の関数 ---
 # ----------------------------------------------------
 def quiz1_transform_page():
     """クイズ 1 (変換公式編) のロジックを実行する関数"""
@@ -202,11 +202,12 @@ def quiz1_transform_page():
         st.session_state.show_result = False
 
     def q1_initialize_session_state():
-        # 'page'以外のクイズ1専用のステートを初期化
+        # クイズ1専用のステートをクリアし、ホームからの遷移の場合の初期値を設定する
         if 'range_selected' not in st.session_state:
             st.session_state.range_selected = False
-            st.session_state.offset_range = "ALL"
+            st.session_state.offset_range = "ALL" # デフォルト値
         
+        # 範囲選択後、または「もう一度行う」でクリアされた後に、クイズの状態をリセット
         if 'score' not in st.session_state and st.session_state.range_selected:
             st.session_state.score = 0
             st.session_state.question_count = 0
@@ -259,7 +260,6 @@ def quiz1_transform_page():
         row1 = st.columns(2)
         row2 = st.columns(2)
         
-        # 範囲選択ボタン
         if row1[0].button(Q1_OFFSET_RANGES["0~180"]["label"], use_container_width=True, key="q1_range_0_180"):
             st.session_state.offset_range = "0~180"
             st.session_state.range_selected = True
@@ -287,7 +287,6 @@ def quiz1_transform_page():
     elif st.session_state.show_result:
         # 結果表示
         end_time = time.time()
-        # 経過時間を計算 (Decimalで精度を維持し、2桁で四捨五入)
         elapsed = Decimal(str(end_time - st.session_state.start_time)).quantize(Decimal('0.01'), ROUND_HALF_UP)
 
         st.header("✨ クイズ終了！ 結果発表 ✨")
@@ -296,19 +295,14 @@ def quiz1_transform_page():
         st.divider()
 
         st.subheader("全解答の確認")
-
         table_data = []
         for i, item in enumerate(st.session_state.history, 1):
             problem_disp = rf"{item['question_disp']} " 
-            
             user_latex = Q1_RESULT_OPTIONS[item['user_answer_key']]
             correct_latex = Q1_RESULT_OPTIONS[item['correct_answer_key']]
-
             user_disp = rf"$$ {user_latex} $$"
             correct_disp = rf"$$ {correct_latex} $$"
-
             mark = "○" if item['is_correct'] else "×"
-
             table_data.append({
                 "番号": i,
                 "問題": problem_disp,
@@ -316,14 +310,15 @@ def quiz1_transform_page():
                 "正解": correct_disp,
                 "正誤": mark
             })
-
         df = pd.DataFrame(table_data)
         st.table(df.set_index("番号"))
 
-        # ★★★ 要件: 「もう一度行う」ボタン（クイズ選択画面に戻る）
-        if st.button("もう一度行う（クイズ選択に戻る）", key='q1_restart', use_container_width=True, type="primary"):
+        # ★★★ 修正: 「もう一度行う」ボタン（クイズ1の範囲選択画面に戻る）
+        if st.button("もう一度行う（クイズ1を再開）", key='q1_restart', use_container_width=True, type="primary"):
             st.session_state.clear()
-            st.session_state.page = 'home'
+            # ページは quiz1 のまま、クイズ1専用のステートを初期化（範囲選択画面へ戻る）
+            st.session_state.page = 'quiz1' # 念のため page ステートも設定
+            q1_initialize_session_state() 
             st.rerun()
 
     else:
@@ -351,7 +346,7 @@ def quiz1_transform_page():
 
 
 # ----------------------------------------------------
-# --- 🖼️ クイズ 2 の関数 (Trigonometric_ratios_on_web.py) ---
+# --- 🖼️ クイズ 2 の関数 ---
 # ----------------------------------------------------
 def quiz2_famous_angles_page():
     """クイズ 2 (有名角編) のロジックを実行する関数"""
@@ -368,11 +363,12 @@ def quiz2_famous_angles_page():
         st.session_state.show_result = False
 
     def q2_initialize_session_state():
-        # 'page'以外のクイズ2専用のステートを初期化
+        # クイズ2専用のステートをクリアし、ホームからの遷移の場合の初期値を設定する
         if 'range_selected' not in st.session_state:
             st.session_state.range_selected = False
-            st.session_state.angle_range = "ALL"
+            st.session_state.angle_range = "ALL" # デフォルト値
         
+        # 範囲選択後、または「もう一度行う」でクリアされた後に、クイズの状態をリセット
         if 'func' not in st.session_state and st.session_state.range_selected:
             st.session_state.score = 0
             st.session_state.question_count = 0
@@ -383,7 +379,6 @@ def quiz2_famous_angles_page():
 
     def q2_check_answer_and_advance():
         if st.session_state.selected is None:
-            # 本来はボタンを押した時点で選択されているのでこの処理は不要だが、念のため残す
             return
 
         current_func = st.session_state.func
@@ -458,7 +453,6 @@ def quiz2_famous_angles_page():
         st.divider()
 
         st.subheader("全解答の確認")
-
         table_data = []
         for i, item in enumerate(st.session_state.history, 1):
             if item['angle'] < 0:
@@ -477,14 +471,15 @@ def quiz2_famous_angles_page():
                 "正解": correct_disp,
                 "正誤": mark
             })
-
         df = pd.DataFrame(table_data)
         st.table(df.set_index("番号"))
 
-        # ★★★ 要件: 「もう一度行う」ボタン（クイズ選択画面に戻る）
-        if st.button("もう一度行う（クイズ選択に戻る）", key="q2_restart", type="primary"):
+        # ★★★ 修正: 「もう一度行う」ボタン（クイズ2の範囲選択画面に戻る）
+        if st.button("もう一度行う（クイズ2を再開）", key="q2_restart", type="primary"):
             st.session_state.clear()
-            st.session_state.page = 'home'
+            # ページは quiz2 のまま、クイズ2専用のステートを初期化（範囲選択画面へ戻る）
+            st.session_state.page = 'quiz2' # 念のため page ステートも設定
+            q2_initialize_session_state()
             st.rerun()
 
     else:
@@ -510,7 +505,6 @@ def quiz2_famous_angles_page():
         for i, key in enumerate(display_options):
             with cols[i % 4]:
                 button_key = f"q2_option_{st.session_state.question_count}_{key}"
-                # ボタンが押されたら、その選択肢をステートに保存し、チェック関数を呼び出す
                 if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
                     st.session_state.selected = key
                     q2_check_answer_and_advance()
@@ -520,15 +514,14 @@ def quiz2_famous_angles_page():
 # --- 🚀 メインアプリケーションロジック ---
 # ----------------------------------------------------
 
-# ★★★ 要件: 画面右上の「ホームに戻る」ボタン
+# ★★★ 要件: 画面右上の「ホームに戻る」ボタン (ホーム以外で表示)
 if st.session_state.page != 'home':
-    # ホーム画面以外で表示
     with st.container():
         # wideレイアウトの右端にボタンを配置
         col_space, col_home_btn = st.columns([0.8, 0.2]) 
         with col_home_btn:
             if st.button("🏠 ホームに戻る", key='go_home_top', type="secondary", use_container_width=True):
-                # セッションをクリアし、ホーム画面に戻る
+                # セッションをクリアし、ホーム画面に遷移
                 st.session_state.clear()
                 st.session_state.page = 'home'
                 st.rerun()
