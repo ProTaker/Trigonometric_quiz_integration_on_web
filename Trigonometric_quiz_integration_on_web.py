@@ -117,7 +117,7 @@ Q2_ANSWERS = {
 # 共通CSS (前回の回答と同じ)
 st.markdown("""
 <style>
-/* クイズ選択画面画面のボタンを大きくする */
+/* クイズ選択画面のボタンを大きくする */
 .stButton button[key*="go_to_quiz"] {
     height: 120px !important;
     font-size: 24px !important;
@@ -153,7 +153,7 @@ div.stButton > button {
 # ----------------------------------------------------
 def home_page():
     """クイズ選択画面（クイズ選択画面）を表示する関数"""
-    st.title("🌟 統合三角比クイズ")
+    st.title("三角比クイズ")
     st.header("挑戦するクイズを選んでください")
     st.markdown("---")
 
@@ -161,8 +161,8 @@ def home_page():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("クイズ（補角・余角）")
-        st.markdown("$$ \\text{sin}(90^\\circ - \\theta) =  ? $$ のような変換公式を問うクイズです。")
-        if st.button("クイズ（補角・余角）)", key='go_to_quiz1', use_container_width=True):
+        st.markdown("$$ \\text{sin}(90^\\circ - \\theta) = \ ? $$ のような変換公式を問うクイズです。")
+        if st.button("クイズ\\（補角・余角）)", key='go_to_quiz1', use_container_width=True):
             st.session_state.clear() 
             st.session_state.page = 'quiz1'
             st.rerun()
@@ -170,8 +170,8 @@ def home_page():
     # 2. クイズ 2 (有名角の三角比)
     with col2:
         st.subheader("クイズ（有名角の三角比）")
-        st.markdown("$$ \\text{cos}(120^\\circ) =  ? $$ のような有名角の三角比を問うクイズです。")
-        if st.button("クイズ（有名角の三角比）)", key='go_to_quiz2', use_container_width=True):
+        st.markdown("$$ \\text{cos}120^\\circ = \ ? $$ のような有名角の三角比を問うクイズです。")
+        if st.button("クイズ\\（有名角の三角比）)", key='go_to_quiz2', use_container_width=True):
             st.session_state.clear()
             st.session_state.page = 'quiz2'
             st.rerun()
