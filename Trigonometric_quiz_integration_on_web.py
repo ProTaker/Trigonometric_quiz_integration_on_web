@@ -160,18 +160,18 @@ def home_page():
     # 1. クイズ 1 (補角・余角)
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("クイズ（補角・余角）")
+        st.subheader("補角・余角")
         st.markdown("$$ \\text{sin}(90^\\circ - \\theta) = \ ? $$ のような変換公式を問うクイズです。")
-        if st.button("クイズ\n（補角・余角）)", key='go_to_quiz1', use_container_width=True):
+        if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
             st.session_state.clear() 
             st.session_state.page = 'quiz1'
             st.rerun()
 
     # 2. クイズ 2 (有名角の三角比)
     with col2:
-        st.subheader("クイズ（有名角の三角比）")
+        st.subheader("有名角の三角比")
         st.markdown("$$ \\text{cos}120^\\circ = \ ? $$ のような有名角の三角比を問うクイズです。")
-        if st.button("クイズ\n（有名角の三角比）)", key='go_to_quiz2', use_container_width=True):
+        if st.button("有名角の三角比", key='go_to_quiz2', use_container_width=True):
             st.session_state.clear()
             st.session_state.page = 'quiz2'
             st.rerun()
@@ -314,7 +314,7 @@ def quiz1_transform_page():
         st.table(df.set_index("番号"))
 
         # ★★★ 修正: 「もう一度行う」ボタン（クイズ1の範囲選択画面に戻る）
-        if st.button("もう一度行う（クイズ（補角・余角））", key='q1_restart', use_container_width=True, type="primary"):
+        if st.button("もう一度行う", key='q1_restart', use_container_width=True, type="primary"):
             st.session_state.clear()
             # ページは quiz1 のまま、クイズ1専用のステートを初期化（範囲選択画面へ戻る）
             st.session_state.page = 'quiz1' # 念のため page ステートも設定
@@ -475,7 +475,7 @@ def quiz2_famous_angles_page():
         st.table(df.set_index("番号"))
 
         # ★★★ 修正: 「もう一度行う」ボタン（クイズ2の範囲選択画面に戻る）
-        if st.button("もう一度行う（クイズ（有名角の三角比））", key="q2_restart", type="primary"):
+        if st.button("もう一度行う", key="q2_restart", type="primary"):
             st.session_state.clear()
             # ページは quiz2 のまま、クイズ2専用のステートを初期化（範囲選択画面へ戻る）
             st.session_state.page = 'quiz2' # 念のため page ステートも設定
