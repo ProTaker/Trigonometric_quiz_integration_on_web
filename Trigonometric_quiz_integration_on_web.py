@@ -170,7 +170,7 @@ def home_page():
     # 2. クイズ 2 (有名角の三角比)
     with col2:
         st.subheader("有名角の三角比")
-        st.markdown("$$ \\text{cos}120^\\circ = \ ? $$ のような有名角の三角比を問うクイズです。")
+        st.markdown("$$ \\text{cos}{120^\\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
         if st.button("有名角の三角比", key='go_to_quiz2', use_container_width=True):
             st.session_state.clear()
             st.session_state.page = 'quiz2'
