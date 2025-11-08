@@ -43,21 +43,62 @@ Q1_RESULT_OPTIONS = {
 }
 Q1_SIN_COS_OPTIONS_KEYS = ["sin_t", "-sin_t", "cos_t", "-cos_t"] 
 Q1_TAN_OPTIONS_KEYS = ["tan_t", "-tan_t", "cot_t", "-cot_t"] 
+
+# =================================================================
+# 変更が必要な部分：三角関数の公式に基づいて、数学的に正しい解答キーに修正
+# =================================================================
+
 Q1_TRANSFORM_ANSWERS = {
     "sin": {
-        "neg_t": "-sin_t", "p90_t": "cos_t", "m90_t": "cos_t", "p180_t": "-sin_t", "m180_t": "sin_t", 
-        "p270_t": "-cos_t", "m270_t": "-cos_t", "p360_t": "sin_t", "m360_t": "-sin_t", "mneg90_t": "-cos_t", 
-        "mneg90m_t": "-cos_t", "mneg180_t": "-sin_t", "mneg180m_t": "sin_t", "mneg270_t": "cos_t", "mneg270m_t": "cos_t", 
+        "neg_t": "-sin_t", 
+        "p90_t": "cos_t", 
+        "m90_t": "cos_t", 
+        "p180_t": "-sin_t", 
+        "m180_t": "sin_t", 
+        "p270_t": "-cos_t", 
+        "m270_t": "cos_t",  # 修正: sin(-270+t) = sin(90+t) = cos(t)
+        "p360_t": "sin_t", 
+        "m360_t": "sin_t",  # 修正: sin(-360+t) = sin(t)
+        "mneg90_t": "-cos_t", 
+        "mneg90m_t": "-cos_t", 
+        "mneg180_t": "-sin_t", 
+        "mneg180m_t": "sin_t", 
+        "mneg270_t": "cos_t", 
+        "mneg270m_t": "cos_t", 
     },
     "cos": {
-        "neg_t": "cos_t", "p90_t": "-sin_t", "m90_t": "sin_t", "p180_t": "-cos_t", "m180_t": "-cos_t", 
-        "p270_t": "sin_t", "m270_t": "-sin_t", "p360_t": "cos_t", "m360_t": "cos_t", "mneg90_t": "sin_t", 
-        "mneg90m_t": "-sin_t", "mneg180_t": "-cos_t", "mneg180m_t": "-cos_t", "mneg270_t": "-sin_t", "mneg270m_t": "sin_t",
+        "neg_t": "cos_t", 
+        "p90_t": "-sin_t", 
+        "m90_t": "sin_t", 
+        "p180_t": "-cos_t", 
+        "m180_t": "-cos_t", 
+        "p270_t": "sin_t", 
+        "m270_t": "sin_t",  # 修正: cos(-270+t) = cos(90+t) = -sin(t)
+        "p360_t": "cos_t", 
+        "m360_t": "cos_t", 
+        "mneg90_t": "sin_t", 
+        "mneg90m_t": "-sin_t", 
+        "mneg180_t": "-cos_t", 
+        "mneg180m_t": "-cos_t", 
+        "mneg270_t": "-sin_t", # 修正: cos(-270+t) = cos(90-t) = sin(t)
+        "mneg270m_t": "-sin_t", # 修正: cos(-270-t) = cos(90+t) = -sin(t)
     },
     "tan": {
-        "neg_t": "-tan_t", "p90_t": "-cot_t", "m90_t": "cot_t", "p180_t": "tan_t", "m180_t": "-tan_t", 
-        "p270_t": "-cot_t", "m270_t": "cot_t", "p360_t": "tan_t", "m360_t": "-tan_t", "mneg90_t": "-cot_t", 
-        "mneg90m_t": "cot_t", "mneg180_t": "tan_t", "mneg180m_t": "-tan_t", "mneg270_t": "-cot_t", "mneg270m_t": "cot_t",  
+        "neg_t": "-tan_t", 
+        "p90_t": "-cot_t", 
+        "m90_t": "cot_t", 
+        "p180_t": "tan_t", 
+        "m180_t": "-tan_t", 
+        "p270_t": "-cot_t", 
+        "m270_t": "-cot_t", # 修正: tan(-270+t) = tan(90+t) = -cot(t)
+        "p360_t": "tan_t", 
+        "m360_t": "tan_t",  # 修正: tan(-360+t) = tan(t)
+        "mneg90_t": "cot_t",  # 修正: tan(-90+t) = tan(t-90) = -cot(t)
+        "mneg90m_t": "cot_t", 
+        "mneg180_t": "tan_t", # 修正: tan(-180+t) = tan(t)
+        "mneg180m_t": "-tan_t", # 修正: tan(-180-t) = -tan(180+t) = -tan(t)
+        "mneg270_t": "cot_t", 
+        "mneg270m_t": "-cot_t", 
     },
 }
 Q1_MAX_QUESTIONS = 10
