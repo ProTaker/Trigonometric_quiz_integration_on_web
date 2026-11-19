@@ -262,10 +262,28 @@ Q2_TAN_OPTIONS = ["0", "1/√3", "1", "√3", "なし", "-1/√3", "-1", "-√3"
 Q2_MAX_QUESTIONS = 10
 
 # ----------------------------------------------------
-# 共通CSS（ボタンサイズ統一 ＆ 結果テーブルのコンパクト整形）
+# 共通CSS（問題文エリアの高さ固定・ボタンサイズ統一・結果テーブル整形）
 # ----------------------------------------------------
 st.markdown("""
 <style>
+/* 問題文のアンカー要素自体は非表示にして余白をなくす */
+div[data-testid="stElementContainer"]:has(.q-area-anchor),
+div.element-container:has(.q-area-anchor) {
+    display: none !important;
+}
+
+/* アンカーの直後にある問題文ブロックの高さを固定して上下中央揃えにする（分数の有無でボタン位置が変わるのを防止） */
+div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] div[data-testid="stMarkdownContainer"],
+div.element-container:has(.q-area-anchor) + div.element-container div[data-testid="stMarkdownContainer"] {
+    height: 110px !important;
+    min-height: 110px !important;
+    max-height: 110px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
 /* ボタンの高さ・幅を完全に統一 */
 div.stButton,
 div[data-testid="stButton"] {
@@ -361,7 +379,7 @@ def top_page():
 
     with col2:
         st.subheader("三角関数クイズ")
-        st.markdown(r"弧度法（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
+        st.markdown(r"弧度法・ラジアン（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
         if st.button("三角関数クイズ", key='go_to_trig_func', use_container_width=True):
             navigate_to('home', category='trig_func')
 
@@ -548,6 +566,7 @@ def quiz1_transform_page():
         
         question_latex = "$$ \\" + current_func + " " + offsets_dict[current_offset_key] + " $$を簡単にせよ"
 
+        st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
         st.markdown(question_latex)
         st.markdown("---")
 
@@ -734,6 +753,7 @@ def quiz2_famous_angles_page():
             else:
                 question_latex = rf"$$ \{current_func} {current_angle}^\circ\ の値は？ $$"
 
+        st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
         st.markdown(question_latex)
 
         if current_func in ["sin", "cos"]:
@@ -781,4 +801,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:22
+# 最終更新日時: 2026-11-19 20:30
