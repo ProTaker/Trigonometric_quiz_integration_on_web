@@ -44,23 +44,23 @@ Q1_OFFSETS_DEG = {
     "mneg270m_t": r"(-270^\circ-\theta)",
 }
 
-# 弧度法・ラジアン（三角関数用：\dfrac と \left( \right) で綺麗に整形）
+# 弧度法・ラジアン（三角関数用：係数1は分子に\pi、係数2以上は分数の横に\pi）
 Q1_OFFSETS_RAD = {
     "neg_t": r"(-\theta)",
     "p90_t": r"\left(\dfrac{\pi}{2}+\theta\right)",
     "m90_t": r"\left(\dfrac{\pi}{2}-\theta\right)",
     "p180_t": r"(\pi+\theta)",
     "m180_t": r"(\pi-\theta)",
-    "p270_t": r"\left(\dfrac{3\pi}{2}+\theta\right)",
-    "m270_t": r"\left(-\dfrac{3\pi}{2}+\theta\right)",
+    "p270_t": r"\left(\dfrac{3}{2}\pi+\theta\right)",
+    "m270_t": r"\left(-\dfrac{3}{2}\pi+\theta\right)",
     "p360_t": r"(2\pi+\theta)",
     "m360_t": r"(-2\pi+\theta)",
     "mneg90_t": r"\left(-\dfrac{\pi}{2}+\theta\right)",
     "mneg90m_t": r"\left(-\dfrac{\pi}{2}-\theta\right)",
     "mneg180_t": r"(-\pi+\theta)",
     "mneg180m_t": r"(-\pi-\theta)",
-    "mneg270_t": r"\left(-\dfrac{3\pi}{2}+\theta\right)",
-    "mneg270m_t": r"\left(-\dfrac{3\pi}{2}-\theta\right)",
+    "mneg270_t": r"\left(-\dfrac{3}{2}\pi+\theta\right)",
+    "mneg270m_t": r"\left(-\dfrac{3}{2}\pi-\theta\right)",
 }
 
 Q1_OFFSET_RANGES = {
@@ -182,20 +182,20 @@ Q2_ANSWERS = {
     }
 }
 
-# 角度（整数値）→ ラジアン分数表記の対応表（\dfrac で綺麗に描画）
+# 角度（整数値）→ ラジアン分数表記の対応表（係数1は分子に\pi、係数2以上は分数の横に\pi）
 Q2_RADIAN_LABELS = {
     -360: r"-2\pi",
-    -330: r"-\dfrac{11\pi}{6}",
-    -315: r"-\dfrac{7\pi}{4}",
-    -300: r"-\dfrac{5\pi}{3}",
-    -270: r"-\dfrac{3\pi}{2}",
-    -240: r"-\dfrac{4\pi}{3}",
-    -225: r"-\dfrac{5\pi}{4}",
-    -210: r"-\dfrac{7\pi}{6}",
+    -330: r"-\dfrac{11}{6}\pi",
+    -315: r"-\dfrac{7}{4}\pi",
+    -300: r"-\dfrac{5}{3}\pi",
+    -270: r"-\dfrac{3}{2}\pi",
+    -240: r"-\dfrac{4}{3}\pi",
+    -225: r"-\dfrac{5}{4}\pi",
+    -210: r"-\dfrac{7}{6}\pi",
     -180: r"-\pi",
-    -150: r"-\dfrac{5\pi}{6}",
-    -135: r"-\dfrac{3\pi}{4}",
-    -120: r"-\dfrac{2\pi}{3}",
+    -150: r"-\dfrac{5}{6}\pi",
+    -135: r"-\dfrac{3}{4}\pi",
+    -120: r"-\dfrac{2}{3}\pi",
     -90: r"-\dfrac{\pi}{2}",
     -60: r"-\dfrac{\pi}{3}",
     -45: r"-\dfrac{\pi}{4}",
@@ -205,22 +205,22 @@ Q2_RADIAN_LABELS = {
     45: r"\dfrac{\pi}{4}",
     60: r"\dfrac{\pi}{3}",
     90: r"\dfrac{\pi}{2}",
-    120: r"\dfrac{2\pi}{3}",
-    135: r"\dfrac{3\pi}{4}",
-    150: r"\dfrac{5\pi}{6}",
+    120: r"\dfrac{2}{3}\pi",
+    135: r"\dfrac{3}{4}\pi",
+    150: r"\dfrac{5}{6}\pi",
     180: r"\pi",
-    210: r"\dfrac{7\pi}{6}",
-    225: r"\dfrac{5\pi}{4}",
-    240: r"\dfrac{4\pi}{3}",
-    270: r"\dfrac{3\pi}{2}",
-    300: r"\dfrac{5\pi}{3}",
-    315: r"\dfrac{7\pi}{4}",
-    330: r"\dfrac{11\pi}{6}",
+    210: r"\dfrac{7}{6}\pi",
+    225: r"\dfrac{5}{4}\pi",
+    240: r"\dfrac{4}{3}\pi",
+    270: r"\dfrac{3}{2}\pi",
+    300: r"\dfrac{5}{3}\pi",
+    315: r"\dfrac{7}{4}\pi",
+    330: r"\dfrac{11}{6}\pi",
     360: r"2\pi",
-    390: r"\dfrac{13\pi}{6}",
-    405: r"\dfrac{9\pi}{4}",
-    420: r"\dfrac{7\pi}{3}",
-    450: r"\dfrac{5\pi}{2}",
+    390: r"\dfrac{13}{6}\pi",
+    405: r"\dfrac{9}{4}\pi",
+    420: r"\dfrac{7}{3}\pi",
+    450: r"\dfrac{5}{2}\pi",
 }
 
 Q2_ANGLE_RANGES = {
@@ -390,7 +390,7 @@ def home_page():
     with col2:
         st.subheader(quiz2_label)
         if is_func:
-            st.markdown(r"$$ \cos\dfrac{2\pi}{3} = \ ? $$ のような有名角の三角関数を問うクイズです。")
+            st.markdown(r"$$ \cos\dfrac{2}{3}\pi = \ ? $$ のような有名角の三角関数を問うクイズです。")
         else:
             st.markdown(r"$$ \text{cos}{120^\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
         if st.button(quiz2_label, key='go_to_quiz2', use_container_width=True):
@@ -779,4 +779,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 19:22
+# 最終更新日時: 2026-11-19 19:25
