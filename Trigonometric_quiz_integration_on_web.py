@@ -257,14 +257,14 @@ def home_page():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("補角・余角")
-        st.markdown(r"$$\text{sin}(90^\circ - \theta) = \ ?$$ のような変換公式を問うクイズです。")
+        st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
         if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
             navigate_to('quiz1')
 
     # 2. クイズ 2 (有名角の三角比 / 三角関数)
     with col2:
         st.subheader(quiz2_label)
-        st.markdown(rf"$$\text{{cos}}{{120^\circ}} = \ ?$$ のような{quiz2_label}を問うクイズです。")
+        st.markdown(rf"$$ \text{{cos}}{{120^\circ}} = \ ? $$ のような{quiz2_label}を問うクイズです。")
         if st.button(quiz2_label, key='go_to_quiz2', use_container_width=True):
             navigate_to('quiz2')
 
@@ -322,7 +322,7 @@ def quiz1_transform_page():
         
         is_correct = (st.session_state.selected == correct_key)
 
-        question_latex = rf"$$\text{{{current\_func}}} {Q1_OFFSETS[current_offset_key]}$$"
+        question_latex = rf"$$ \text{{{current_func}}} {Q1_OFFSETS[current_offset_key]} $$"
         
         st.session_state.history.append({
             "question_disp": question_latex, 
@@ -395,8 +395,8 @@ def quiz1_transform_page():
             problem_disp = rf"{item['question_disp']} " 
             user_latex = Q1_RESULT_OPTIONS[item['user_answer_key']]
             correct_latex = Q1_RESULT_OPTIONS[item['correct_answer_key']]
-            user_disp = rf"$${user_latex}$$"
-            correct_disp = rf"$${correct_latex}$$"
+            user_disp = rf"$$ {user_latex} $$"
+            correct_disp = rf"$$ {correct_latex} $$"
             mark = "○" if item['is_correct'] else "×"
             table_data.append({
                 "番号": i,
@@ -417,7 +417,7 @@ def quiz1_transform_page():
         current_func = st.session_state.func
         current_offset_key = st.session_state.offset_key
         
-        question_latex = rf"$$\text{{{current\_func}}} {Q1_OFFSETS[current_offset_key]}$$を簡単にせよ"
+        question_latex = rf"$$ \text{{{current_func}}} {Q1_OFFSETS[current_offset_key]} $$を簡単にせよ"
 
         st.markdown(question_latex)
         st.markdown("---")
@@ -426,7 +426,7 @@ def quiz1_transform_page():
         
         cols = st.columns(4)
         for i, key in enumerate(display_options_keys):
-            latex_label = rf"$${Q1_RESULT_OPTIONS[key]}$$" 
+            latex_label = rf"$$ {Q1_RESULT_OPTIONS[key]} $$" 
             
             with cols[i]:
                 button_key = f"q1_option_{st.session_state.question_count}_{key}"
@@ -550,4 +550,83 @@ def quiz2_famous_angles_page():
         table_data = []
         for i, item in enumerate(st.session_state.history, 1):
             if item['angle'] < 0:
-                func_disp =
+                func_disp = rf"$\text{{{item['func']}}}\left({item['angle']}^\circ\right)$"
+            else:
+                func_disp = rf"$\text{{{item['func']}}}\ {item['angle']}^\circ$"
+
+            user_disp = Q2_LATEX_OPTIONS.get(item['user_answer'], item['user_answer'])
+            correct_disp = Q2_LATEX_OPTIONS.get(item['correct_answer'], item['correct_answer'])
+            mark = "○" if item['is_correct'] else "×"
+
+            table_data.append({
+                "番号": i,
+                "問題": func_disp,
+                "あなたの解答": user_disp,
+                "正解": correct_disp,
+                "正誤": mark
+            })
+        df = pd.DataFrame(table_data)
+        st.table(df.set_index("番号"))
+
+        if st.button("もう一度行う", key="q2_restart", use_container_width=True, type="primary"):
+            navigate_to('quiz2')
+
+    else:
+        st.subheader(f"問題 {st.session_state.question_count + 1} / {st.session_state.max_questions}")
+
+        current_func = st.session_state.func
+        current_angle = st.session_state.angle
+
+        if current_angle < 0:
+            question_latex = rf"$$ \{current_func}\left({current_angle}^\circ\right)\ の値は？ $$"
+        else:
+            question_latex = rf"$$ \{current_func} {current_angle}^\circ\ の値は？ $$"
+
+        st.markdown(question_latex)
+
+        if current_func in ["sin", "cos"]:
+            display_options = Q2_SIN_COS_OPTIONS
+        else:
+            display_options = Q2_TAN_OPTIONS
+
+        cols = st.columns(4)
+        for i, key in enumerate(display_options):
+            with cols[i % 4]:
+                button_key = f"q2_option_{st.session_state.question_count}_{key}"
+                if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
+                    st.session_state.selected = key
+                    q2_check_answer_and_advance()
+
+# ----------------------------------------------------
+# --- 🚀 メインアプリケーションロジック ---
+# ----------------------------------------------------
+# 画面右上の階層ナビゲーションボタン（トップ画面以外で表示）
+if st.session_state.page == 'home':
+    with st.container():
+        col_space, col_top_btn = st.columns([0.8, 0.2])
+        with col_top_btn:
+            if st.button("トップ画面に戻る", key='go_top_from_home', type="secondary", use_container_width=True):
+                navigate_to('top')
+    st.markdown("---")
+elif st.session_state.page in ['quiz1', 'quiz2']:
+    with st.container():
+        col_space, col_home_btn, col_top_btn = st.columns([0.6, 0.2, 0.2])
+        with col_home_btn:
+            if st.button("クイズ選択画面に戻る", key='go_home_top', type="secondary", use_container_width=True):
+                navigate_to('home')
+        with col_top_btn:
+            if st.button("トップ画面に戻る", key='go_top_from_quiz', type="secondary", use_container_width=True):
+                navigate_to('top')
+    st.markdown("---")
+
+# ページの状態に基づいて表示する関数を切り替え
+if st.session_state.page == 'top':
+    top_page()
+elif st.session_state.page == 'home':
+    home_page()
+elif st.session_state.page == 'quiz1':
+    quiz1_transform_page()
+elif st.session_state.page == 'quiz2':
+    quiz2_famous_angles_page()
+
+# 最終更新日時: 2026-11-19 19:08
