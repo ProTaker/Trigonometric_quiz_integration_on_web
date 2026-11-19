@@ -471,8 +471,6 @@ def quiz1_transform_page():
         else:
             q1_new_question()
 
-        st.rerun()
-
     # 初期化呼び出し
     q1_initialize_session_state()
 
@@ -560,9 +558,15 @@ def quiz1_transform_page():
             latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
             
             with cols[i % 4]:
-                button_key = f"q1_option_{st.session_state.question_count}_{key}"
-                if st.button(latex_label, use_container_width=True, key=button_key):
-                    q1_check_answer_and_advance(key)
+                # 問題番号を含めない固定キーにすることで、問題が変わっても同じ8個のボタンを使い回す
+                button_key = f"q1_option_{key}"
+                st.button(
+                    latex_label,
+                    use_container_width=True,
+                    key=button_key,
+                    on_click=q1_check_answer_and_advance,
+                    args=(key,)
+                )
 
 # ----------------------------------------------------
 # --- 🖼️ クイズ 2 の関数 ---
@@ -777,4 +781,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:19
+# 最終更新日時: 2026-11-19 20:22
