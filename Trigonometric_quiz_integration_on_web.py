@@ -262,13 +262,17 @@ Q2_TAN_OPTIONS = ["0", "1/√3", "1", "√3", "なし", "-1/√3", "-1", "-√3"
 Q2_MAX_QUESTIONS = 10
 
 # ----------------------------------------------------
-# 共通CSS（問題文エリアの高さ固定・ボタンサイズ統一・結果テーブル整形）
+# 共通CSS（問題文エリアの高さ固定・ボタンサイズ統一・レスポンシブ対応）
 # ----------------------------------------------------
 st.markdown("""
 <style>
-/* 問題文のアンカー要素自体は非表示にして余白をなくす */
+/* レイアウト制御用のアンカー要素自体は非表示にして余白をなくす */
 div[data-testid="stElementContainer"]:has(.q-area-anchor),
-div.element-container:has(.q-area-anchor) {
+div.element-container:has(.q-area-anchor),
+div[data-testid="stElementContainer"]:has(.options-grid-anchor),
+div.element-container:has(.options-grid-anchor),
+div[data-testid="stElementContainer"]:has(.top-nav-anchor),
+div.element-container:has(.top-nav-anchor) {
     display: none !important;
 }
 
@@ -284,7 +288,7 @@ div.element-container:has(.q-area-anchor) + div.element-container div[data-testi
     align-items: center !important;
 }
 
-/* ボタンの高さ・幅を完全に統一 */
+/* ボタンの高さ・幅を完全に統一（PC・iPad標準） */
 div.stButton,
 div[data-testid="stButton"] {
     width: 100% !important;
@@ -309,6 +313,74 @@ div.stButton > button .katex-display {
     margin: 0 !important;
     padding: 0 !important;
     line-height: 1.2 !important;
+}
+
+/* スマホ画面（767px以下）向けのレイアウト最適化 */
+@media (max-width: 767px) {
+    /* 上部のナビゲーションボタン（「戻る」ボタン）をコンパクトな横並びに維持 */
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+    }
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:not(:has(button)) {
+        display: none !important;
+    }
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:has(button) {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        width: auto !important;
+    }
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] button {
+        height: 44px !important;
+        min-height: 44px !important;
+        max-height: 44px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* 問題文エリアの高さをスマホ向けに調整 */
+    div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] div[data-testid="stMarkdownContainer"],
+    div.element-container:has(.q-area-anchor) + div.element-container div[data-testid="stMarkdownContainer"] {
+        height: 88px !important;
+        min-height: 88px !important;
+        max-height: 88px !important;
+    }
+
+    /* 選択肢グリッドをスマホでは2列（8択なら4行2列）にする */
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+        width: calc(50% - 4px) !important;
+        min-width: calc(50% - 4px) !important;
+        max-width: calc(50% - 4px) !important;
+        flex: 0 0 calc(50% - 4px) !important;
+    }
+
+    /* スマホでの選択肢ボタンの高さをコンパクトにして4行2列が1画面に収まるようにする */
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] button {
+        height: 62px !important;
+        min-height: 62px !important;
+        max-height: 62px !important;
+    }
+
+    /* 結果テーブルをスマホ幅に収める */
+    div[data-testid="stTable"] table {
+        font-size: 0.82rem !important;
+    }
+    div[data-testid="stTable"] thead tr th,
+    div[data-testid="stTable"] tbody tr th,
+    div[data-testid="stTable"] tbody tr td {
+        padding: 8px 4px !important;
+    }
+    div[data-testid="stTable"] tbody tr th,
+    div[data-testid="stTable"] tbody tr td:last-child {
+        width: 40px !important;
+    }
 }
 
 /* 結果確認テーブルをコンパクトで整ったデザインに調整（分数も上下にゆとりを持たせて綺麗に描画） */
@@ -572,20 +644,21 @@ def quiz1_transform_page():
 
         display_options_keys = st.session_state.display_options
         
-        cols = st.columns(4)
-        for i, key in enumerate(display_options_keys):
-            latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
-            
-            with cols[i % 4]:
-                # 問題番号を含めない固定キーにすることで、問題が変わっても同じ8個のボタンを使い回す
-                button_key = f"q1_option_{key}"
-                st.button(
-                    latex_label,
-                    use_container_width=True,
-                    key=button_key,
-                    on_click=q1_check_answer_and_advance,
-                    args=(key,)
-                )
+        st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
+        for row_start in range(0, len(display_options_keys), 4):
+            cols = st.columns(4)
+            for i, key in enumerate(display_options_keys[row_start:row_start + 4]):
+                latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
+                with cols[i]:
+                    # 問題番号を含めない固定キーにすることで、問題が変わっても同じ8個のボタンを使い回す
+                    button_key = f"q1_option_{key}"
+                    st.button(
+                        latex_label,
+                        use_container_width=True,
+                        key=button_key,
+                        on_click=q1_check_answer_and_advance,
+                        args=(key,)
+                    )
 
 # ----------------------------------------------------
 # --- 🖼️ クイズ 2 の関数 ---
@@ -761,34 +834,36 @@ def quiz2_famous_angles_page():
         else:
             display_options = Q2_TAN_OPTIONS
 
-        cols = st.columns(4)
-        for i, key in enumerate(display_options):
-            with cols[i % 4]:
-                button_key = f"q2_option_{st.session_state.question_count}_{key}"
-                if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
-                    st.session_state.selected = key
-                    q2_check_answer_and_advance()
+        st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
+        for row_start in range(0, len(display_options), 4):
+            cols = st.columns(4)
+            for i, key in enumerate(display_options[row_start:row_start + 4]):
+                with cols[i]:
+                    button_key = f"q2_option_{st.session_state.question_count}_{key}"
+                    if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
+                        st.session_state.selected = key
+                        q2_check_answer_and_advance()
 
 # ----------------------------------------------------
 # --- 🚀 メインアプリケーションロジック ---
 # ----------------------------------------------------
 # 画面右上の階層ナビゲーションボタン（トップ画面以外で表示）
 if st.session_state.page == 'home':
-    with st.container():
-        col_space, col_top_btn = st.columns([0.8, 0.2])
-        with col_top_btn:
-            if st.button("トップ画面に戻る", key='go_top_from_home', type="secondary", use_container_width=True):
-                navigate_to('top')
+    st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
+    col_space, col_top_btn = st.columns([0.8, 0.2])
+    with col_top_btn:
+        if st.button("トップ画面に戻る", key='go_top_from_home', type="secondary", use_container_width=True):
+            navigate_to('top')
     st.markdown("---")
 elif st.session_state.page in ['quiz1', 'quiz2']:
-    with st.container():
-        col_space, col_home_btn, col_top_btn = st.columns([0.6, 0.2, 0.2])
-        with col_home_btn:
-            if st.button("クイズ選択画面に戻る", key='go_home_top', type="secondary", use_container_width=True):
-                navigate_to('home')
-        with col_top_btn:
-            if st.button("トップ画面に戻る", key='go_top_from_quiz', type="secondary", use_container_width=True):
-                navigate_to('top')
+    st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
+    col_space, col_home_btn, col_top_btn = st.columns([0.6, 0.2, 0.2])
+    with col_home_btn:
+        if st.button("クイズ選択画面に戻る", key='go_home_top', type="secondary", use_container_width=True):
+            navigate_to('home')
+    with col_top_btn:
+        if st.button("トップ画面に戻る", key='go_top_from_quiz', type="secondary", use_container_width=True):
+            navigate_to('top')
     st.markdown("---")
 
 # ページの状態に基づいて表示する関数を切り替え
@@ -801,4 +876,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:33
+# 最終更新日時: 2026-11-19 20:36
