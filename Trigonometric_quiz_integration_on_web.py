@@ -375,19 +375,9 @@ def home_page():
     st.header("挑戦するクイズを選んでください")
     st.markdown("---")
 
-    # 1. クイズ 1 (補角・余角)
     col1, col2 = st.columns(2)
+    # 1. 有名角の三角比 / 三角関数（左）
     with col1:
-        st.subheader("補角・余角")
-        if is_func:
-            st.markdown(r"$$ \sin\left(\dfrac{\pi}{2} - \theta\right) = \ ? $$ のような変換公式を問うクイズです。")
-        else:
-            st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
-        if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
-            navigate_to('quiz1')
-
-    # 2. クイズ 2 (有名角の三角比 / 三角関数)
-    with col2:
         st.subheader(quiz2_label)
         if is_func:
             st.markdown(r"$$ \cos\dfrac{2}{3}\pi = \ ? $$ のような有名角の三角関数を問うクイズです。")
@@ -395,6 +385,16 @@ def home_page():
             st.markdown(r"$$ \text{cos}{120^\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
         if st.button(quiz2_label, key='go_to_quiz2', use_container_width=True):
             navigate_to('quiz2')
+
+    # 2. 補角・余角（右）
+    with col2:
+        st.subheader("補角・余角")
+        if is_func:
+            st.markdown(r"$$ \sin\left(\dfrac{\pi}{2} - \theta\right) = \ ? $$ のような変換公式を問うクイズです。")
+        else:
+            st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
+        if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
+            navigate_to('quiz1')
 
 # ----------------------------------------------------
 # --- 📝 クイズ 1 の関数 ---
@@ -780,4 +780,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 19:47
+# 最終更新日時: 2026-11-19 20:17
