@@ -170,17 +170,8 @@ Q2_ANSWERS = {
 }
 
 # ----------------------------------------------------
-# 共通CSS（ボタンサイズを固定して統一）
-# ----------------------------------------------------
+# 共通CSS (元のコードと同じ)
 st.markdown("""
-<style>
-div.stButton > button {
-    height: 75px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>
 """, unsafe_allow_html=True)
 
 # ----------------------------------------------------
@@ -561,4 +552,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 18:52
+# 最終更新日時: 2026-11-19 18:54
