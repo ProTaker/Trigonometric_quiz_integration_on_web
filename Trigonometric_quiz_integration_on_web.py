@@ -173,8 +173,36 @@ Q2_TAN_OPTIONS = ["0", "1/√3", "1", "√3", "なし", "-1/√3", "-1", "-√3"
 Q2_MAX_QUESTIONS = 10
 
 # ----------------------------------------------------
-# 共通CSS (元のファイルと同じ)
+# 共通CSS（すべてのボタンの高さと幅を完全に統一）
+# ----------------------------------------------------
 st.markdown("""
+<style>
+div.stButton,
+div[data-testid="stButton"] {
+    width: 100% !important;
+}
+div.stButton > button,
+button[data-testid="stBaseButton-secondary"],
+button[data-testid="stBaseButton-primary"] {
+    width: 100% !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+}
+div.stButton > button p,
+button[data-testid="stBaseButton-secondary"] p,
+button[data-testid="stBaseButton-primary"] p,
+div.stButton > button .katex-display {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+}
+</style>
 """, unsafe_allow_html=True)
 
 # ----------------------------------------------------
@@ -518,7 +546,7 @@ def quiz2_famous_angles_page():
         st.table(df.set_index("番号"))
 
         # 「もう一度行う」ボタン（クイズ2の範囲選択画面に戻る）
-        if st.button("もう一度行う", key="q2_restart", type="primary"):
+        if st.button("もう一度行う", key="q2_restart", use_container_width=True, type="primary"):
             st.session_state.clear()
             st.session_state.page = 'quiz2'
             q2_initialize_session_state()
@@ -573,4 +601,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 18:55
+# 最終更新日時: 2026-11-19 18:58
