@@ -97,8 +97,11 @@ Q1_RESULT_OPTIONS = {
     "-cot_t": r"-\dfrac{1}{\tan\theta}",
 }
 
-Q1_SIN_COS_OPTIONS_KEYS = ["sin_t", "-sin_t", "cos_t", "-cos_t"]
-Q1_TAN_OPTIONS_KEYS = ["tan_t", "-tan_t", "cot_t", "-cot_t"]
+# 常に表示する8通りの選択肢キー
+Q1_ALL_OPTIONS_KEYS = [
+    "sin_t", "-sin_t", "cos_t", "-cos_t",
+    "tan_t", "-tan_t", "cot_t", "-cot_t"
+]
 
 Q1_TRANSFORM_ANSWERS = {
     "sin": {
@@ -414,13 +417,7 @@ def quiz1_transform_page():
         func, offset_key = st.session_state.q1_pool.pop()
         st.session_state.func = func
         st.session_state.offset_key = offset_key
-        
-        if st.session_state.func in ["sin", "cos"]:
-            options_base = Q1_SIN_COS_OPTIONS_KEYS
-        else:
-            options_base = Q1_TAN_OPTIONS_KEYS
-            
-        st.session_state.display_options = options_base
+        st.session_state.display_options = Q1_ALL_OPTIONS_KEYS
         st.session_state.selected = None
         st.session_state.show_result = False
 
@@ -562,7 +559,7 @@ def quiz1_transform_page():
         for i, key in enumerate(display_options_keys):
             latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
             
-            with cols[i]:
+            with cols[i % 4]:
                 button_key = f"q1_option_{st.session_state.question_count}_{key}"
                 if st.button(latex_label, use_container_width=True, key=button_key):
                     q1_check_answer_and_advance(key)
@@ -780,4 +777,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:17
+# 最終更新日時: 2026-11-19 20:19
