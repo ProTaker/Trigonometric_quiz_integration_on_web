@@ -44,7 +44,7 @@ Q1_OFFSETS_DEG = {
     "mneg270m_t": r"(-270^\circ-\theta)",
 }
 
-# 弧度法・ラジアン（三角関数用：係数1は分子に\pi、係数2以上は分数の横に\pi）
+# 弧度法（三角関数用：係数1は分子に\pi、係数2以上は分数の横に\pi）
 Q1_OFFSETS_RAD = {
     "neg_t": r"(-\theta)",
     "p90_t": r"\left(\dfrac{\pi}{2}+\theta\right)",
@@ -185,7 +185,7 @@ Q2_ANSWERS = {
     }
 }
 
-# 角度（整数値）→ ラジアン分数表記の対応表（係数1は分子に\pi、係数2以上は分数の横に\pi）
+# 角度（整数値）→ 弧度法（ラジアン）分数表記の対応表（係数1は分子に\pi、係数2以上は分数の横に\pi）
 Q2_RADIAN_LABELS = {
     -360: r"-2\pi",
     -330: r"-\dfrac{11}{6}\pi",
@@ -379,7 +379,7 @@ def top_page():
 
     with col2:
         st.subheader("三角関数クイズ")
-        st.markdown(r"弧度法・ラジアン（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
+        st.markdown(r"弧度法（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
         if st.button("三角関数クイズ", key='go_to_trig_func', use_container_width=True):
             navigate_to('home', category='trig_func')
 
@@ -801,4 +801,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:30
+# 最終更新日時: 2026-11-19 20:33
