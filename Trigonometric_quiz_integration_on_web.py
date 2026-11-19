@@ -276,9 +276,9 @@ div.element-container:has(.top-nav-anchor) {
     display: none !important;
 }
 
-/* アンカーの直後にある問題文ブロックの高さを固定して上下中央揃えにする（分数の有無でボタン位置が変わるのを防止） */
-div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] div[data-testid="stMarkdownContainer"],
-div.element-container:has(.q-area-anchor) + div.element-container div[data-testid="stMarkdownContainer"] {
+/* 問題文コンテナ内の数式ブロックの高さを固定して上下中央揃えにする（分数の有無でボタン位置が変わるのを防止） */
+div[data-testid="stVerticalBlock"]:has(> div .q-area-anchor) div[data-testid="stMarkdownContainer"]:not(:has(.q-area-anchor)),
+div.stVerticalBlock:has(> div .q-area-anchor) div[data-testid="stMarkdownContainer"]:not(:has(.q-area-anchor)) {
     height: 110px !important;
     min-height: 110px !important;
     max-height: 110px !important;
@@ -318,20 +318,24 @@ div.stButton > button .katex-display {
 /* スマホ画面（767px以下）向けのレイアウト最適化 */
 @media (max-width: 767px) {
     /* 上部のナビゲーションボタン（「戻る」ボタン）をコンパクトな横並びに維持 */
-    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] {
+    div[data-testid="stVerticalBlock"]:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"],
+    div.stVerticalBlock:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         gap: 8px !important;
     }
-    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:not(:has(button)) {
+    div[data-testid="stVerticalBlock"]:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
+    div.stVerticalBlock:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
         display: none !important;
     }
-    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:has(button) {
+    div[data-testid="stVerticalBlock"]:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"] > div:has(button),
+    div.stVerticalBlock:has(> div .top-nav-anchor) div[data-testid="stHorizontalBlock"] > div:has(button) {
         flex: 1 1 0 !important;
         min-width: 0 !important;
         width: auto !important;
     }
-    div[data-testid="stElementContainer"]:has(.top-nav-anchor) + div[data-testid="stHorizontalBlock"] button {
+    div[data-testid="stVerticalBlock"]:has(> div .top-nav-anchor) button,
+    div.stVerticalBlock:has(> div .top-nav-anchor) button {
         height: 44px !important;
         min-height: 44px !important;
         max-height: 44px !important;
@@ -339,22 +343,28 @@ div.stButton > button .katex-display {
     }
 
     /* 問題文エリアの高さをスマホ向けに調整 */
-    div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] div[data-testid="stMarkdownContainer"],
-    div.element-container:has(.q-area-anchor) + div.element-container div[data-testid="stMarkdownContainer"] {
+    div[data-testid="stVerticalBlock"]:has(> div .q-area-anchor) div[data-testid="stMarkdownContainer"]:not(:has(.q-area-anchor)),
+    div.stVerticalBlock:has(> div .q-area-anchor) div[data-testid="stMarkdownContainer"]:not(:has(.q-area-anchor)) {
         height: 88px !important;
         min-height: 88px !important;
         max-height: 88px !important;
     }
 
     /* 選択肢グリッドをスマホでは2列（8択なら4行2列）にする */
-    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] {
+    div[data-testid="stVerticalBlock"]:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"],
+    div.stVerticalBlock:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
         gap: 8px !important;
         margin-bottom: 8px !important;
     }
-    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+    div[data-testid="stVerticalBlock"]:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
+    div.stVerticalBlock:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
+        display: none !important;
+    }
+    div[data-testid="stVerticalBlock"]:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"] > div:has(button),
+    div.stVerticalBlock:has(> div .options-grid-anchor) div[data-testid="stHorizontalBlock"] > div:has(button) {
         width: calc(50% - 4px) !important;
         min-width: calc(50% - 4px) !important;
         max-width: calc(50% - 4px) !important;
@@ -362,7 +372,8 @@ div.stButton > button .katex-display {
     }
 
     /* スマホでの選択肢ボタンの高さをコンパクトにして4行2列が1画面に収まるようにする */
-    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div[data-testid="stHorizontalBlock"] button {
+    div[data-testid="stVerticalBlock"]:has(> div .options-grid-anchor) button,
+    div.stVerticalBlock:has(> div .options-grid-anchor) button {
         height: 62px !important;
         min-height: 62px !important;
         max-height: 62px !important;
@@ -638,27 +649,29 @@ def quiz1_transform_page():
         
         question_latex = "$$ \\" + current_func + " " + offsets_dict[current_offset_key] + " $$を簡単にせよ"
 
-        st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
-        st.markdown(question_latex)
+        with st.container():
+            st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
+            st.markdown(question_latex)
         st.markdown("---")
 
         display_options_keys = st.session_state.display_options
         
-        st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
-        for row_start in range(0, len(display_options_keys), 4):
-            cols = st.columns(4)
-            for i, key in enumerate(display_options_keys[row_start:row_start + 4]):
-                latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
-                with cols[i]:
-                    # 問題番号を含めない固定キーにすることで、問題が変わっても同じ8個のボタンを使い回す
-                    button_key = f"q1_option_{key}"
-                    st.button(
-                        latex_label,
-                        use_container_width=True,
-                        key=button_key,
-                        on_click=q1_check_answer_and_advance,
-                        args=(key,)
-                    )
+        with st.container():
+            st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
+            for row_start in range(0, len(display_options_keys), 4):
+                cols = st.columns(4)
+                for i, key in enumerate(display_options_keys[row_start:row_start + 4]):
+                    latex_label = f"$$ {Q1_RESULT_OPTIONS[key]} $$"
+                    with cols[i]:
+                        # 問題番号を含めない固定キーにすることで、問題が変わっても同じ8個のボタンを使い回す
+                        button_key = f"q1_option_{key}"
+                        st.button(
+                            latex_label,
+                            use_container_width=True,
+                            key=button_key,
+                            on_click=q1_check_answer_and_advance,
+                            args=(key,)
+                        )
 
 # ----------------------------------------------------
 # --- 🖼️ クイズ 2 の関数 ---
@@ -826,44 +839,48 @@ def quiz2_famous_angles_page():
             else:
                 question_latex = rf"$$ \{current_func} {current_angle}^\circ\ の値は？ $$"
 
-        st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
-        st.markdown(question_latex)
+        with st.container():
+            st.markdown('<div class="q-area-anchor"></div>', unsafe_allow_html=True)
+            st.markdown(question_latex)
 
         if current_func in ["sin", "cos"]:
             display_options = Q2_SIN_COS_OPTIONS
         else:
             display_options = Q2_TAN_OPTIONS
 
-        st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
-        for row_start in range(0, len(display_options), 4):
-            cols = st.columns(4)
-            for i, key in enumerate(display_options[row_start:row_start + 4]):
-                with cols[i]:
-                    button_key = f"q2_option_{st.session_state.question_count}_{key}"
-                    if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
-                        st.session_state.selected = key
-                        q2_check_answer_and_advance()
+        with st.container():
+            st.markdown('<div class="options-grid-anchor"></div>', unsafe_allow_html=True)
+            for row_start in range(0, len(display_options), 4):
+                cols = st.columns(4)
+                for i, key in enumerate(display_options[row_start:row_start + 4]):
+                    with cols[i]:
+                        button_key = f"q2_option_{st.session_state.question_count}_{key}"
+                        if st.button(Q2_LATEX_OPTIONS[key], use_container_width=True, key=button_key):
+                            st.session_state.selected = key
+                            q2_check_answer_and_advance()
 
 # ----------------------------------------------------
 # --- 🚀 メインアプリケーションロジック ---
 # ----------------------------------------------------
 # 画面右上の階層ナビゲーションボタン（トップ画面以外で表示）
 if st.session_state.page == 'home':
-    st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
-    col_space, col_top_btn = st.columns([0.8, 0.2])
-    with col_top_btn:
-        if st.button("トップ画面に戻る", key='go_top_from_home', type="secondary", use_container_width=True):
-            navigate_to('top')
+    with st.container():
+        st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
+        col_space, col_top_btn = st.columns([0.8, 0.2])
+        with col_top_btn:
+            if st.button("トップ画面に戻る", key='go_top_from_home', type="secondary", use_container_width=True):
+                navigate_to('top')
     st.markdown("---")
 elif st.session_state.page in ['quiz1', 'quiz2']:
-    st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
-    col_space, col_home_btn, col_top_btn = st.columns([0.6, 0.2, 0.2])
-    with col_home_btn:
-        if st.button("クイズ選択画面に戻る", key='go_home_top', type="secondary", use_container_width=True):
-            navigate_to('home')
-    with col_top_btn:
-        if st.button("トップ画面に戻る", key='go_top_from_quiz', type="secondary", use_container_width=True):
-            navigate_to('top')
+    with st.container():
+        st.markdown('<div class="top-nav-anchor"></div>', unsafe_allow_html=True)
+        col_space, col_home_btn, col_top_btn = st.columns([0.6, 0.2, 0.2])
+        with col_home_btn:
+            if st.button("クイズ選択画面に戻る", key='go_home_top', type="secondary", use_container_width=True):
+                navigate_to('home')
+        with col_top_btn:
+            if st.button("トップ画面に戻る", key='go_top_from_quiz', type="secondary", use_container_width=True):
+                navigate_to('top')
     st.markdown("---")
 
 # ページの状態に基づいて表示する関数を切り替え
@@ -876,4 +893,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 20:36
+# 最終更新日時: 2026-11-19 20:41
