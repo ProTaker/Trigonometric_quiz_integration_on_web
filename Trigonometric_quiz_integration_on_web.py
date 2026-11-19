@@ -25,7 +25,8 @@ if 'category' not in st.session_state:
 # --- クイズ1 (補角・余角編) の定数 ---
 Q1_FUNCTIONS = ["sin", "cos", "tan"]
 
-Q1_OFFSETS = {
+# 度数法（三角比用）
+Q1_OFFSETS_DEG = {
     "neg_t": r"(-\theta)",
     "p90_t": r"(90^\circ+\theta)",
     "m90_t": r"(90^\circ-\theta)",
@@ -43,11 +44,46 @@ Q1_OFFSETS = {
     "mneg270m_t": r"(-270^\circ-\theta)",
 }
 
+# 弧度法・ラジアン（三角関数用：\dfrac と \left( \right) で綺麗に整形）
+Q1_OFFSETS_RAD = {
+    "neg_t": r"(-\theta)",
+    "p90_t": r"\left(\dfrac{\pi}{2}+\theta\right)",
+    "m90_t": r"\left(\dfrac{\pi}{2}-\theta\right)",
+    "p180_t": r"(\pi+\theta)",
+    "m180_t": r"(\pi-\theta)",
+    "p270_t": r"\left(\dfrac{3\pi}{2}+\theta\right)",
+    "m270_t": r"\left(-\dfrac{3\pi}{2}+\theta\right)",
+    "p360_t": r"(2\pi+\theta)",
+    "m360_t": r"(-2\pi+\theta)",
+    "mneg90_t": r"\left(-\dfrac{\pi}{2}+\theta\right)",
+    "mneg90m_t": r"\left(-\dfrac{\pi}{2}-\theta\right)",
+    "mneg180_t": r"(-\pi+\theta)",
+    "mneg180m_t": r"(-\pi-\theta)",
+    "mneg270_t": r"\left(-\dfrac{3\pi}{2}+\theta\right)",
+    "mneg270m_t": r"\left(-\dfrac{3\pi}{2}-\theta\right)",
+}
+
 Q1_OFFSET_RANGES = {
-    "0~180": {"label": r" $0^\circ \sim 180^\circ$ ", "keys": ["m90_t", "p90_t", "m180_t"]},
-    "0~360": {"label": r" $0^\circ \sim 360^\circ$ ", "keys": ["m90_t", "p90_t", "m180_t", "p180_t", "m270_t", "p270_t", "m360_t"]},
-    "-180~180": {"label": r" $-180^\circ \sim 180^\circ$ ", "keys": ["neg_t", "m90_t", "p90_t", "m180_t", "mneg90_t", "mneg90m_t", "mneg180_t"]},
-    "ALL": {"label": "全範囲", "keys": list(Q1_OFFSETS.keys())}
+    "0~180": {
+        "deg_label": r" $0^\circ \sim 180^\circ$ ",
+        "rad_label": r" $0 \sim \pi$ ",
+        "keys": ["m90_t", "p90_t", "m180_t"]
+    },
+    "0~360": {
+        "deg_label": r" $0^\circ \sim 360^\circ$ ",
+        "rad_label": r" $0 \sim 2\pi$ ",
+        "keys": ["m90_t", "p90_t", "m180_t", "p180_t", "m270_t", "p270_t", "m360_t"]
+    },
+    "-180~180": {
+        "deg_label": r" $-180^\circ \sim 180^\circ$ ",
+        "rad_label": r" $-\pi \sim \pi$ ",
+        "keys": ["neg_t", "m90_t", "p90_t", "m180_t", "mneg90_t", "mneg90m_t", "mneg180_t"]
+    },
+    "ALL": {
+        "deg_label": "全範囲",
+        "rad_label": "全範囲",
+        "keys": list(Q1_OFFSETS_DEG.keys())
+    }
 }
 
 Q1_RESULT_OPTIONS = {
@@ -146,11 +182,59 @@ Q2_ANSWERS = {
     }
 }
 
+# 角度（整数値）→ ラジアン分数表記の対応表（\dfrac で綺麗に描画）
+Q2_RADIAN_LABELS = {
+    -360: r"-2\pi",
+    -330: r"-\dfrac{11\pi}{6}",
+    -315: r"-\dfrac{7\pi}{4}",
+    -300: r"-\dfrac{5\pi}{3}",
+    -270: r"-\dfrac{3\pi}{2}",
+    -240: r"-\dfrac{4\pi}{3}",
+    -225: r"-\dfrac{5\pi}{4}",
+    -210: r"-\dfrac{7\pi}{6}",
+    -180: r"-\pi",
+    -150: r"-\dfrac{5\pi}{6}",
+    -135: r"-\dfrac{3\pi}{4}",
+    -120: r"-\dfrac{2\pi}{3}",
+    -90: r"-\dfrac{\pi}{2}",
+    -60: r"-\dfrac{\pi}{3}",
+    -45: r"-\dfrac{\pi}{4}",
+    -30: r"-\dfrac{\pi}{6}",
+    0: r"0",
+    30: r"\dfrac{\pi}{6}",
+    45: r"\dfrac{\pi}{4}",
+    60: r"\dfrac{\pi}{3}",
+    90: r"\dfrac{\pi}{2}",
+    120: r"\dfrac{2\pi}{3}",
+    135: r"\dfrac{3\pi}{4}",
+    150: r"\dfrac{5\pi}{6}",
+    180: r"\pi",
+    210: r"\dfrac{7\pi}{6}",
+    225: r"\dfrac{5\pi}{4}",
+    240: r"\dfrac{4\pi}{3}",
+    270: r"\dfrac{3\pi}{2}",
+    300: r"\dfrac{5\pi}{3}",
+    315: r"\dfrac{7\pi}{4}",
+    330: r"\dfrac{11\pi}{6}",
+    360: r"2\pi",
+    390: r"\dfrac{13\pi}{6}",
+    405: r"\dfrac{9\pi}{4}",
+    420: r"\dfrac{7\pi}{3}",
+    450: r"\dfrac{5\pi}{2}",
+}
+
 Q2_ANGLE_RANGES = {
     "0~180": [0, 30, 45, 60, 90, 120, 135, 150, 180],
     "0~360": [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360],
     "-180~180": [-180, -150, -135, -120, -90, -60, -45, -30, 0, 30, 45, 60, 90, 120, 135, 150, 180],
     "ALL": list(Q2_ANSWERS["sin"].keys())
+}
+
+Q2_RANGE_LABELS = {
+    "0~180": {"deg": r"$0^\circ \sim 180^\circ$", "rad": r"$0 \sim \pi$"},
+    "0~360": {"deg": r"$0^\circ \sim 360^\circ$", "rad": r"$0 \sim 2\pi$"},
+    "-180~180": {"deg": r"$-180^\circ \sim 180^\circ$", "rad": r"$-\pi \sim \pi$"},
+    "ALL": {"deg": "全範囲", "rad": "全範囲"},
 }
 
 Q2_LATEX_OPTIONS = {
@@ -206,7 +290,7 @@ div.stButton > button .katex-display {
     line-height: 1.2 !important;
 }
 
-/* 結果確認テーブルをコンパクトで整ったデザインに調整 */
+/* 結果確認テーブルをコンパクトで整ったデザインに調整（分数も上下にゆとりを持たせて綺麗に描画） */
 div[data-testid="stTable"] {
     max-width: 640px !important;
     margin: 0 auto 1.2rem auto !important;
@@ -230,8 +314,8 @@ div[data-testid="stTable"] tbody tr th,
 div[data-testid="stTable"] tbody tr td {
     text-align: center !important;
     vertical-align: middle !important;
-    padding: 8px 8px !important;
-    line-height: 1.3 !important;
+    padding: 11px 8px !important;
+    line-height: 1.4 !important;
 }
 div[data-testid="stTable"] tbody tr th {
     width: 56px !important;
@@ -268,13 +352,13 @@ def top_page():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("三角比クイズ")
-        st.markdown("補角・余角の変換公式や、有名角の三角比を問うクイズです。")
+        st.markdown(r"度数法（$0^\circ \sim 360^\circ$ など）での変換公式や有名角の三角比を問うクイズです。")
         if st.button("三角比クイズ", key='go_to_trig_ratio', use_container_width=True):
             navigate_to('home', category='trig_ratio')
 
     with col2:
         st.subheader("三角関数クイズ")
-        st.markdown("補角・余角の変換公式や、有名角の三角関数を問うクイズです。")
+        st.markdown(r"弧度法・ラジアン（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
         if st.button("三角関数クイズ", key='go_to_trig_func', use_container_width=True):
             navigate_to('home', category='trig_func')
 
@@ -295,14 +379,20 @@ def home_page():
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("補角・余角")
-        st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
+        if is_func:
+            st.markdown(r"$$ \sin\left(\dfrac{\pi}{2} - \theta\right) = \ ? $$ のような変換公式を問うクイズです。")
+        else:
+            st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
         if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
             navigate_to('quiz1')
 
     # 2. クイズ 2 (有名角の三角比 / 三角関数)
     with col2:
         st.subheader(quiz2_label)
-        st.markdown(r"$$ \text{cos}{120^\circ} = \ ? $$ のような" + quiz2_label + "を問うクイズです。")
+        if is_func:
+            st.markdown(r"$$ \cos\dfrac{2\pi}{3} = \ ? $$ のような有名角の三角関数を問うクイズです。")
+        else:
+            st.markdown(r"$$ \text{cos}{120^\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
         if st.button(quiz2_label, key='go_to_quiz2', use_container_width=True):
             navigate_to('quiz2')
 
@@ -311,6 +401,10 @@ def home_page():
 # ----------------------------------------------------
 def quiz1_transform_page():
     """クイズ (補角・余角) のロジックを実行する関数"""
+    is_func = (st.session_state.get('category') == 'trig_func')
+    offsets_dict = Q1_OFFSETS_RAD if is_func else Q1_OFFSETS_DEG
+    label_key = "rad_label" if is_func else "deg_label"
+
     st.title("クイズ（補角・余角）")
 
     # -----------------------------
@@ -360,7 +454,7 @@ def quiz1_transform_page():
         
         is_correct = (st.session_state.selected == correct_key)
 
-        question_inline = "$ \\text{" + current_func + "} " + Q1_OFFSETS[current_offset_key] + " $"
+        question_inline = "$ \\" + current_func + " " + offsets_dict[current_offset_key] + " $"
         
         st.session_state.history.append({
             "question_disp": question_inline, 
@@ -394,25 +488,25 @@ def quiz1_transform_page():
         row1 = st.columns(2)
         row2 = st.columns(2)
         
-        if row1[0].button(Q1_OFFSET_RANGES["0~180"]["label"], use_container_width=True, key="q1_range_0_180"):
+        if row1[0].button(Q1_OFFSET_RANGES["0~180"][label_key], use_container_width=True, key="q1_range_0_180"):
             st.session_state.offset_range = "0~180"
             st.session_state.range_selected = True
             q1_initialize_session_state()
             st.rerun()
             
-        if row1[1].button(Q1_OFFSET_RANGES["0~360"]["label"], use_container_width=True, key="q1_range_0_360"):
+        if row1[1].button(Q1_OFFSET_RANGES["0~360"][label_key], use_container_width=True, key="q1_range_0_360"):
             st.session_state.offset_range = "0~360"
             st.session_state.range_selected = True
             q1_initialize_session_state()
             st.rerun()
             
-        if row2[0].button(Q1_OFFSET_RANGES["-180~180"]["label"], use_container_width=True, key="q1_range_-180_180"):
+        if row2[0].button(Q1_OFFSET_RANGES["-180~180"][label_key], use_container_width=True, key="q1_range_-180_180"):
             st.session_state.offset_range = "-180~180"
             st.session_state.range_selected = True
             q1_initialize_session_state()
             st.rerun()
             
-        if row2[1].button(Q1_OFFSET_RANGES["ALL"]["label"], use_container_width=True, key="q1_range_all"):
+        if row2[1].button(Q1_OFFSET_RANGES["ALL"][label_key], use_container_width=True, key="q1_range_all"):
             st.session_state.offset_range = "ALL"
             st.session_state.range_selected = True
             q1_initialize_session_state()
@@ -456,7 +550,7 @@ def quiz1_transform_page():
         current_func = st.session_state.func
         current_offset_key = st.session_state.offset_key
         
-        question_latex = "$$ \\text{" + current_func + "} " + Q1_OFFSETS[current_offset_key] + " $$を簡単にせよ"
+        question_latex = "$$ \\" + current_func + " " + offsets_dict[current_offset_key] + " $$を簡単にせよ"
 
         st.markdown(question_latex)
         st.markdown("---")
@@ -478,6 +572,7 @@ def quiz1_transform_page():
 def quiz2_famous_angles_page():
     """クイズ 2 (有名角の三角比 / 三角関数) のロジックを実行する関数"""
     is_func = (st.session_state.get('category') == 'trig_func')
+    range_mode = "rad" if is_func else "deg"
     st.title("クイズ（有名角の三角関数）" if is_func else "クイズ（有名角の三角比）")
 
     # -----------------------------
@@ -554,23 +649,23 @@ def quiz2_famous_angles_page():
         row1 = st.columns(2)
         row2 = st.columns(2)
 
-        if row1[0].button(r"$0^\circ \sim 180^\circ$", use_container_width=True, key="q2_range_0_180"):
+        if row1[0].button(Q2_RANGE_LABELS["0~180"][range_mode], use_container_width=True, key="q2_range_0_180"):
             st.session_state.angle_range = "0~180"
             st.session_state.range_selected = True
             q2_initialize_session_state()
             st.rerun()
-        if row1[1].button(r"$0^\circ \sim 360^\circ$", use_container_width=True, key="q2_range_0_360"):
+        if row1[1].button(Q2_RANGE_LABELS["0~360"][range_mode], use_container_width=True, key="q2_range_0_360"):
             st.session_state.angle_range = "0~360"
             st.session_state.range_selected = True
             q2_initialize_session_state()
             st.rerun()
 
-        if row2[0].button(r"$-180^\circ \sim 180^\circ$", use_container_width=True, key="q2_range_-180_180"):
+        if row2[0].button(Q2_RANGE_LABELS["-180~180"][range_mode], use_container_width=True, key="q2_range_-180_180"):
             st.session_state.angle_range = "-180~180"
             st.session_state.range_selected = True
             q2_initialize_session_state()
             st.rerun()
-        if row2[1].button(r"全範囲", use_container_width=True, key="q2_range_all"):
+        if row2[1].button(Q2_RANGE_LABELS["ALL"][range_mode], use_container_width=True, key="q2_range_all"):
             st.session_state.angle_range = "ALL"
             st.session_state.range_selected = True
             q2_initialize_session_state()
@@ -590,10 +685,17 @@ def quiz2_famous_angles_page():
             st.subheader("全解答の確認")
             table_data = []
             for i, item in enumerate(st.session_state.history, 1):
-                if item['angle'] < 0:
-                    func_disp = "$\\text{" + item['func'] + "}\\left(" + str(item['angle']) + "^\\circ\\right)$"
+                if is_func:
+                    rad_str = Q2_RADIAN_LABELS[item['angle']]
+                    if item['angle'] < 0:
+                        func_disp = "$\\" + item['func'] + "\\left(" + rad_str + "\\right)$"
+                    else:
+                        func_disp = "$\\" + item['func'] + " " + rad_str + "$"
                 else:
-                    func_disp = "$\\text{" + item['func'] + "}\\ " + str(item['angle']) + "^\\circ$"
+                    if item['angle'] < 0:
+                        func_disp = "$\\text{" + item['func'] + "}\\left(" + str(item['angle']) + "^\\circ\\right)$"
+                    else:
+                        func_disp = "$\\text{" + item['func'] + "}\\ " + str(item['angle']) + "^\\circ$"
 
                 user_disp = Q2_LATEX_OPTIONS.get(item['user_answer'], item['user_answer'])
                 correct_disp = Q2_LATEX_OPTIONS.get(item['correct_answer'], item['correct_answer'])
@@ -618,10 +720,17 @@ def quiz2_famous_angles_page():
         current_func = st.session_state.func
         current_angle = st.session_state.angle
 
-        if current_angle < 0:
-            question_latex = rf"$$ \{current_func}\left({current_angle}^\circ\right)\ の値は？ $$"
+        if is_func:
+            rad_str = Q2_RADIAN_LABELS[current_angle]
+            if current_angle < 0:
+                question_latex = "$$ \\" + current_func + "\\left(" + rad_str + "\\right)\\ の値は？ $$"
+            else:
+                question_latex = "$$ \\" + current_func + " " + rad_str + "\\ の値は？ $$"
         else:
-            question_latex = rf"$$ \{current_func} {current_angle}^\circ\ の値は？ $$"
+            if current_angle < 0:
+                question_latex = rf"$$ \{current_func}\left({current_angle}^\circ\right)\ の値は？ $$"
+            else:
+                question_latex = rf"$$ \{current_func} {current_angle}^\circ\ の値は？ $$"
 
         st.markdown(question_latex)
 
@@ -670,4 +779,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 19:12
+# 最終更新日時: 2026-11-19 19:22
