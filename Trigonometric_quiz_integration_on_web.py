@@ -358,7 +358,7 @@ def top_page():
 
     with col2:
         st.subheader("三角関数クイズ")
-        st.markdown(r"弧度法（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
+        st.markdown(r"弧度法・ラジアン（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
         if st.button("三角関数クイズ", key='go_to_trig_func', use_container_width=True):
             navigate_to('home', category='trig_func')
 
@@ -454,7 +454,8 @@ def quiz1_transform_page():
         
         is_correct = (st.session_state.selected == correct_key)
 
-        question_inline = "$ \\" + current_func + " " + offsets_dict[current_offset_key] + " $"
+        # インライン数式は $ の直後にスペースを入れない（Markdown数式として正しく描画させるため）
+        question_inline = "$\\" + current_func + " " + offsets_dict[current_offset_key] + "$"
         
         st.session_state.history.append({
             "question_disp": question_inline, 
@@ -528,8 +529,8 @@ def quiz1_transform_page():
             for i, item in enumerate(st.session_state.history, 1):
                 user_latex = Q1_RESULT_OPTIONS[item['user_answer_key']]
                 correct_latex = Q1_RESULT_OPTIONS[item['correct_answer_key']]
-                user_disp = "$ " + user_latex + " $"
-                correct_disp = "$ " + correct_latex + " $"
+                user_disp = "$" + user_latex + "$"
+                correct_disp = "$" + correct_latex + "$"
                 mark = "○" if item['is_correct'] else "×"
                 table_data.append({
                     "番号": i,
@@ -779,4 +780,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-19 19:25
+# 最終更新日時: 2026-11-19 19:47
