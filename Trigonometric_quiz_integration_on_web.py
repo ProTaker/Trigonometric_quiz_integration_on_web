@@ -358,7 +358,7 @@ def top_page():
 
     with col2:
         st.subheader("三角関数クイズ")
-        st.markdown(r"弧度法・ラジアン（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
+        st.markdown(r"弧度法（$0 \sim 2\pi$ など）での変換公式や有名角の三角関数を問うクイズです。")
         if st.button("三角関数クイズ", key='go_to_trig_func', use_container_width=True):
             navigate_to('home', category='trig_func')
 
