@@ -15,8 +15,9 @@ if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
 # ----------------------------------------------------
-# --- クイズ1 (補角・余角編) の定数 ---
+# --- 共通の定数とCSS ---
 # ----------------------------------------------------
+# --- クイズ1 (補角・余角編) の定数 ---
 Q1_FUNCTIONS = ["sin", "cos", "tan"]
 
 Q1_OFFSETS = {
@@ -113,9 +114,7 @@ Q1_TRANSFORM_ANSWERS = {
 }
 Q1_MAX_QUESTIONS = 10
 
-# ----------------------------------------------------
 # --- クイズ2 (有名角編) の定数 ---
-# ----------------------------------------------------
 Q2_FUNCTIONS = ["sin", "cos", "tan"]
 
 Q2_ANGLE_RANGES = {
@@ -171,26 +170,42 @@ Q2_ANSWERS = {
 }
 
 # ----------------------------------------------------
+# 共通CSS（ボタンサイズを固定して統一）
+# ----------------------------------------------------
+st.markdown("""
+<style>
+div.stButton > button {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ----------------------------------------------------
 # --- 🏠 クイズ選択画面の関数 ---
 # ----------------------------------------------------
 def home_page():
-    """クイズ選択画面を表示する関数"""
+    """クイズ選択画面（クイズ選択画面）を表示する関数"""
     st.title("三角比クイズ")
     st.header("挑戦するクイズを選んでください")
     st.markdown("---")
 
+    # 1. クイズ 1 (補角・余角)
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("補角・余角")
-        st.markdown(r"$$ \text{sin}(90^\circ - \theta) = \ ? $$ のような変換公式を問うクイズです。")
+        st.markdown("$$ \\text{sin}(90^\\circ - \\theta) = \ ? $$ のような変換公式を問うクイズです。")
         if st.button("補角・余角", key='go_to_quiz1', use_container_width=True):
             st.session_state.clear()
             st.session_state.page = 'quiz1'
             st.rerun()
 
+    # 2. クイズ 2 (有名角の三角比)
     with col2:
         st.subheader("有名角の三角比")
-        st.markdown(r"$$ \text{cos}{120^\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
+        st.markdown("$$ \\text{cos}{120^\\circ} = \ ? $$ のような有名角の三角比を問うクイズです。")
         if st.button("有名角の三角比", key='go_to_quiz2', use_container_width=True):
             st.session_state.clear()
             st.session_state.page = 'quiz2'
@@ -231,7 +246,7 @@ def quiz1_transform_page():
             st.session_state.history = []
             st.session_state.show_result = False
 
-            # 選択された範囲の全組み合わせを作成してシャッフル（重複防止）
+            # 全組み合わせをシャッフルして重複を防止
             possible_offsets = Q1_OFFSET_RANGES[st.session_state.offset_range]["keys"]
             pool = list(itertools.product(Q1_FUNCTIONS, possible_offsets))
             random.shuffle(pool)
@@ -270,6 +285,7 @@ def quiz1_transform_page():
 
         st.rerun()
 
+    # 初期化呼び出し
     q1_initialize_session_state()
 
     # -----------------------------------------------
@@ -388,7 +404,7 @@ def quiz2_famous_angles_page():
             st.session_state.history = []
             st.session_state.show_result = False
 
-            # 選択された範囲の全組み合わせを作成してシャッフル（重複防止）
+            # 全組み合わせをシャッフルして重複を防止
             possible_angles = Q2_ANGLE_RANGES[st.session_state.angle_range]
             pool = list(itertools.product(Q2_FUNCTIONS, possible_angles))
             random.shuffle(pool)
@@ -428,6 +444,7 @@ def quiz2_famous_angles_page():
 
         st.rerun()
 
+    # 初期化呼び出し
     q2_initialize_session_state()
 
     # -----------------------------------------------
@@ -544,4 +561,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 2026/11/19 更新
+# 最終更新日時: 2026-11-19 18:52
