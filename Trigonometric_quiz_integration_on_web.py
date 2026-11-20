@@ -543,16 +543,19 @@ def quiz1_transform_page():
             q1_new_question()
 
     def q1_check_answer_and_advance(selected_key):
-        st.session_state.selected = selected_key 
-
         current_func = st.session_state.func
         current_offset_key = st.session_state.offset_key
-        correct_key = Q1_TRANSFORM_ANSWERS.get(current_func, {}).get(current_offset_key)
-        
-        is_correct = (st.session_state.selected == correct_key)
 
         # インライン数式は $ の直後にスペースを入れない（Markdown数式として正しく描画させるため）
         question_inline = "$\\" + current_func + " " + offsets_dict[current_offset_key] + "$"
+
+        # 万が一の二重実行などで同じ問題が履歴に重複記録されるのを防止
+        if any(item["question_disp"] == question_inline for item in st.session_state.history):
+            return
+
+        st.session_state.selected = selected_key 
+        correct_key = Q1_TRANSFORM_ANSWERS.get(current_func, {}).get(current_offset_key)
+        is_correct = (st.session_state.selected == correct_key)
         
         st.session_state.history.append({
             "question_disp": question_inline, 
@@ -719,8 +722,12 @@ def quiz2_famous_angles_page():
 
         current_func = st.session_state.func
         current_angle = st.session_state.angle
-        correct = Q2_ANSWERS[current_func][current_angle]
 
+        # 万が一の二重実行などで同じ問題が履歴に重複記録されるのを防止
+        if any(item["func"] == current_func and item["angle"] == current_angle for item in st.session_state.history):
+            return
+
+        correct = Q2_ANSWERS[current_func][current_angle]
         is_correct = (st.session_state.selected == correct)
 
         st.session_state.history.append({
@@ -892,4 +899,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-20 18:39
+# 最終更新日時: 2026-11-20 18:53
