@@ -262,7 +262,7 @@ Q2_TAN_OPTIONS = ["0", "1/√3", "1", "√3", "なし", "-1/√3", "-1", "-√3"
 Q2_MAX_QUESTIONS = 10
 
 # ----------------------------------------------------
-# 共通CSS（問題文エリアの高さ固定・ボタンサイズ統一・レスポンシブ対応）
+# 共通CSS（問題文エリアの高さ完全固定・ボタンサイズ統一・レスポンシブ対応）
 # ----------------------------------------------------
 st.markdown("""
 <style>
@@ -276,15 +276,25 @@ div.element-container:has(.top-nav-anchor) {
     display: none !important;
 }
 
-/* 問題文コンテナ内の数式ブロックのみ高さを固定（横位置は元のまま維持し、分数の有無でボタン位置が変わるのを防止） */
-div[data-testid="stVerticalBlock"]:has(> div > div > div > .q-area-anchor) > div:not(:has(.q-area-anchor)) div[data-testid="stMarkdownContainer"],
-div.stVerticalBlock:has(> div > div > div > .q-area-anchor) > div:not(:has(.q-area-anchor)) div[data-testid="stMarkdownContainer"] {
-    height: 110px !important;
-    min-height: 110px !important;
-    max-height: 110px !important;
+/* 問題文アンカーの直後にある要素（問題文コンテナ）の高さを完全固定し、選択肢ボタンの位置ズレを防止 */
+div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"],
+div.element-container:has(.q-area-anchor) + div.element-container {
+    height: 115px !important;
+    min-height: 115px !important;
+    max-height: 115px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
+    overflow: hidden !important;
+}
+div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] div[data-testid="stMarkdownContainer"],
+div.element-container:has(.q-area-anchor) + div.element-container div[data-testid="stMarkdownContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"] .katex-display,
+div.element-container:has(.q-area-anchor) + div.element-container .katex-display {
+    margin: 0.25em 0 !important;
 }
 
 /* ボタンの高さ・幅を完全に統一（PC・iPad標準） */
@@ -317,53 +327,53 @@ div.stButton > button .katex-display {
 /* スマホ画面（767px以下）向けのレイアウト最適化 */
 @media (max-width: 767px) {
     /* 上部のナビゲーションボタン（「戻る」ボタン）をコンパクトな横並びに維持 */
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"],
-    div.stVerticalBlock:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"] {
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"],
+    div.element-container:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         gap: 8px !important;
     }
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
-    div.stVerticalBlock:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
+    div.element-container:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
         display: none !important;
     }
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"] > div:has(button),
-    div.stVerticalBlock:has(> div > div > div > .top-nav-anchor) > div[data-testid="stHorizontalBlock"] > div:has(button) {
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:has(button),
+    div.element-container:has(.top-nav-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:has(button) {
         flex: 1 1 0 !important;
         min-width: 0 !important;
         width: auto !important;
     }
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .top-nav-anchor) button,
-    div.stVerticalBlock:has(> div > div > div > .top-nav-anchor) button {
+    div[data-testid="stElementContainer"]:has(.top-nav-anchor) ~ div button,
+    div.element-container:has(.top-nav-anchor) ~ div button {
         height: 44px !important;
         min-height: 44px !important;
         max-height: 44px !important;
         font-size: 0.85rem !important;
     }
 
-    /* 問題文エリアの高さをスマホ向けに調整 */
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .q-area-anchor) > div:not(:has(.q-area-anchor)) div[data-testid="stMarkdownContainer"],
-    div.stVerticalBlock:has(> div > div > div > .q-area-anchor) > div:not(:has(.q-area-anchor)) div[data-testid="stMarkdownContainer"] {
-        height: 88px !important;
-        min-height: 88px !important;
-        max-height: 88px !important;
+    /* 問題文エリアの高さをスマホ向けに固定 */
+    div[data-testid="stElementContainer"]:has(.q-area-anchor) + div[data-testid="stElementContainer"],
+    div.element-container:has(.q-area-anchor) + div.element-container {
+        height: 90px !important;
+        min-height: 90px !important;
+        max-height: 90px !important;
     }
 
     /* 選択肢グリッドをスマホでは2列（8択なら4行2列）にする */
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"],
-    div.stVerticalBlock:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"] {
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"],
+    div.element-container:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
         gap: 8px !important;
         margin-bottom: 8px !important;
     }
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
-    div.stVerticalBlock:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:not(:has(button)),
+    div.element-container:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:not(:has(button)) {
         display: none !important;
     }
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"] > div:has(button),
-    div.stVerticalBlock:has(> div > div > div > .options-grid-anchor) > div[data-testid="stHorizontalBlock"] > div:has(button) {
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:has(button),
+    div.element-container:has(.options-grid-anchor) ~ div div[data-testid="stHorizontalBlock"] > div:has(button) {
         width: calc(50% - 4px) !important;
         min-width: calc(50% - 4px) !important;
         max-width: calc(50% - 4px) !important;
@@ -371,8 +381,8 @@ div.stButton > button .katex-display {
     }
 
     /* スマホでの選択肢ボタンの高さをコンパクトにして4行2列が1画面に収まるようにする */
-    div[data-testid="stVerticalBlock"]:has(> div > div > div > .options-grid-anchor) button,
-    div.stVerticalBlock:has(> div > div > div > .options-grid-anchor) button {
+    div[data-testid="stElementContainer"]:has(.options-grid-anchor) ~ div button,
+    div.element-container:has(.options-grid-anchor) ~ div button {
         height: 62px !important;
         min-height: 62px !important;
         max-height: 62px !important;
@@ -899,4 +909,4 @@ elif st.session_state.page == 'quiz1':
 elif st.session_state.page == 'quiz2':
     quiz2_famous_angles_page()
 
-# 最終更新日時: 2026-11-20 18:53
+# 最終更新日時: 2026-11-20 19:06
